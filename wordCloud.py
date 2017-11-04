@@ -48,15 +48,18 @@ import PIL.Image as Image
 coloring = np.array(Image.open("./wechat/wechat.jpg"))#自定义词云的图片
 my_wordcloud = WordCloud(background_color="white", max_words=2000, mask=coloring, max_font_size=60, random_state=42, font_path='C:/windows/fonts/SimHei.ttf',scale=2).generate(word_space_split) # wget http://labfile.oss.aliyuncs.com/courses/756/DroidSansFallbackFull.ttf中文字符文件
 
+# 程序绘制图片
 image_colors = ImageColorGenerator(coloring)
+plt.figure("wechat_cloud")
 plt.imshow(my_wordcloud.recolor(color_func=image_colors))
 plt.imshow(my_wordcloud)
 plt.axis("off")
 plt.show()
-plt.close() # 图片关闭后将图片发送至手机,保存图片，并发送至手机
+plt.close()
 
+#保存图片
 file_name_p =  './image/wechat_cloud.jpg'
-my_wordcloud.to_file(file_name_p) #保存图片
+my_wordcloud.to_file(file_name_p)
 
 # 将签名词云发送到文件助手
 itchat.send_image(file_name_p, 'filehelper')
