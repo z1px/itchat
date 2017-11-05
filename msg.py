@@ -18,6 +18,9 @@ import os
 
 from common.func import mkdir
 
+path = "./temp/"
+mkdir(path=path)
+
 msg_information = {}
 face_bug=None  #针对表情包的内容
 
@@ -49,8 +52,6 @@ def handle_receive_msg(msg):
     #如果发送的消息是附件、视屏、图片、语音
     elif msg['Type'] == "Attachment" or msg['Type'] == "Video" or msg['Type'] == 'Picture' or msg['Type'] == 'Recording':
         msg_content = msg['FileName']    #内容就是他们的文件名
-        path = "./temp/"
-        mkdir(path=path)
         msg['Text'](str(path + msg_content))    #下载文件
         if msg['Type'] == "Attachment":
             msg_type = "一个附件"
@@ -101,9 +102,10 @@ def information(msg):
     if '撤回了一条消息' in msg['Content']:
         old_msg_id = re.search("\<msgid\>(.*?)\<\/msgid\>", msg['Content']).group(1)   #在返回的content查找撤回的消息的id
         old_msg = msg_information.get(old_msg_id)    #得到消息
-        print(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()), old_msg)
+        # print(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()), old_msg)
         if len(old_msg_id)<11:  #如果发送的是表情包
             itchat.send_file(face_bug, toUserName='filehelper')
+            print(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()), face_bug)
         else:  #发送撤回的提示给文件助手
             msg_body = "告诉你一个秘密~" + "\n" \
                        + old_msg.get('msg_from') + " 撤回了 " + old_msg.get("msg_type") + " 消息" + "\n" \
@@ -118,9 +120,12 @@ def information(msg):
             itchat.send_msg(msg_body, toUserName='filehelper')
             # 有文件的话也要将文件发送回去
             if old_msg["msg_type"] == "Picture" or old_msg["msg_type"] == "Recording" or old_msg["msg_type"] == "Video" or old_msg["msg_type"] == "Attachment":
-                file = '@fil@%s' % (old_msg['msg_content'])
+                file = '@fil@%s' % (path + old_msg['msg_content'])
                 itchat.send(msg=file, toUserName='filehelper')
-                os.remove(old_msg['msg_content'])
+                os.remove(path + old_msg['msg_content'])
+                msg_body += "\n就是这个文件➣ " + old_msg['msg_content']
+
+            print("[消息撤回]：", msg_body + "\n[消息撤回END]")
             # 删除字典旧消息
             msg_information.pop(old_msg_id)
 
