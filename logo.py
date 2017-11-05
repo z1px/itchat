@@ -23,13 +23,13 @@ friends = itchat.get_friends(update=True)[0:]
 path = './logo/'
 mkdir(path=path)
 
-# for item in friends:
-#     # 可以打印item来看其中具体是什么内容，有什么字段
-#     img = itchat.get_head_img(userName=item['UserName'])
-#     if not item['RemarkName']:
-#         item['RemarkName'] = item['NickName']
-#     with open(path + item['RemarkName'] + '.jpg', 'wb') as f:
-#         f.write(img)
+for item in friends:
+    # 可以打印item来看其中具体是什么内容，有什么字段
+    img = itchat.get_head_img(userName=item['UserName'])
+    if not item['RemarkName']:
+        item['RemarkName'] = item['NickName']
+    with open(path + item['RemarkName'] + '.jpg', 'wb') as f:
+        f.write(img)
 
 # 获取好友昵称和签名
 info = [(item['RemarkName'] if item['RemarkName'] else item['NickName'], item['Signature']) for item in friends]

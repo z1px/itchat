@@ -32,13 +32,13 @@ def handle_receive_msg(msg):
     # 在好友列表中查询发送信息的好友昵称
     msg_from = itchat.search_friends(userName=msg['FromUserName'])
     if msg_from:
-        msg_from = msg_from['NickName']
+        msg_from = msg_from["RemarkName"] if msg_from["RemarkName"] else msg_from['NickName']
     else:
         msg_from = msg['FromUserName']
     # 在好友列表中查询接收信息的好友昵称
     msg_to = itchat.search_friends(userName=msg['ToUserName'])
     if msg_to:
-        msg_to = msg_to['NickName']
+        msg_to = msg_to["RemarkName"] if msg_to["RemarkName"] else msg_to['NickName']
     else:
         msg_to = msg['ToUserName']
     msg_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(msg['CreateTime']))    #信息发送的时间
