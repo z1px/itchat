@@ -27,7 +27,6 @@ face_bug=None  #针对表情包的内容
 @itchat.msg_register([TEXT, PICTURE, FRIENDS, CARD, MAP, SHARING, RECORDING, ATTACHMENT, VIDEO],isFriendChat=True, isGroupChat=True, isMpChat=True)
 def handle_receive_msg(msg):
     global face_bug
-    print(msg)
     # 接受消息的时间
     msg_time_rec = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
 
