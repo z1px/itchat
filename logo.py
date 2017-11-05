@@ -20,7 +20,8 @@ itchat.auto_login(hotReload=True)
 
 friends = itchat.get_friends(update=True)[0:]
 
-path = mkdir('./logo/')
+path = './logo/'
+mkdir(path=path)
 
 # for item in friends:
 #     # 可以打印item来看其中具体是什么内容，有什么字段
@@ -75,7 +76,9 @@ plt.show()
 plt.close()
 
 #保存图片
-logo = mkdir("./image/") + "logo.jpg"
+path_image = "./image/"
+mkdir(path=path_image)
+logo = path_image + "logo.jpg"
 image.save(logo)
 
 # 通过文件助手发给自己

@@ -49,7 +49,9 @@ def handle_receive_msg(msg):
     #如果发送的消息是附件、视屏、图片、语音
     elif msg['Type'] == "Attachment" or msg['Type'] == "Video" or msg['Type'] == 'Picture' or msg['Type'] == 'Recording':
         msg_content = msg['FileName']    #内容就是他们的文件名
-        msg['Text'](str(mkdir("./temp/") + msg_content))    #下载文件
+        path = "./temp/"
+        mkdir(path=path)
+        msg['Text'](str(path + msg_content))    #下载文件
         if msg['Type'] == "Attachment":
             msg_type = "一个附件"
         elif msg['Type'] == "Video":

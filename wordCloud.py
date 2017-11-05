@@ -60,7 +60,9 @@ plt.show()
 plt.close()
 
 #保存图片
-file_name_p =  mkdir("./image/") + 'wechat_cloud.jpg'
+path_image = "./image/"
+mkdir(path=path_image)
+file_name_p =  path_image + 'wechat_cloud.jpg'
 my_wordcloud.to_file(file_name_p)
 
 # 将签名词云发送到文件助手
