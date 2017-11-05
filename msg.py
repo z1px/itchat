@@ -29,18 +29,30 @@ def handle_receive_msg(msg):
     global face_bug
     # 接受消息的时间
     msg_time_rec = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+
     # 在好友列表中查询发送信息的好友昵称
-    msg_from = itchat.search_friends(userName=msg['FromUserName'])
+    msg_from = itchat.search_friends(userName=msg.get("FromUserName"))
     if msg_from:
         msg_from = msg_from["RemarkName"] if msg_from["RemarkName"] else msg_from['NickName']
     else:
         msg_from = msg['FromUserName']
     # 在好友列表中查询接收信息的好友昵称
-    msg_to = itchat.search_friends(userName=msg['ToUserName'])
-    if msg_to:
-        msg_to = msg_to["RemarkName"] if msg_to["RemarkName"] else msg_to['NickName']
+    if msg.get("ActualUserName"):
+        # 讨论组消息
+        try:
+            msg_to = msg.get("User")
+            msg_to = msg_to.get("NickName")
+        except:
+            msg_to = msg.get("ToUserName")
+        msg_to = msg_to + "（讨论组）"
     else:
-        msg_to = msg['ToUserName']
+        # 好友消息
+        msg_to = itchat.search_friends(userName=msg.get("ToUserName"))
+        if msg_to:
+            msg_to = msg_to["RemarkName"] if msg_to["RemarkName"] else msg_to['NickName']
+        else:
+            msg_to = msg['ToUserName']
+
     msg_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(msg['CreateTime']))    #信息发送的时间
     msg_id = msg['MsgId']    #每条信息的id
     msg_content = None      #储存信息的内容
