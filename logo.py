@@ -13,12 +13,14 @@ import math
 from PIL import Image
 import os
 
+from common.func import mkdir
+
 # hotReload=True  # 使用这个属性，生成一个静态文件itchat.pkl，用于存储登陆的状态。
 itchat.auto_login(hotReload=True)
 
 friends = itchat.get_friends(update=True)[0:]
 
-path = './logo/'
+path = mkdir('./logo/')
 
 # for item in friends:
 #     # 可以打印item来看其中具体是什么内容，有什么字段
@@ -73,7 +75,7 @@ plt.show()
 plt.close()
 
 #保存图片
-logo = "./wechat/logo.jpg"
+logo = mkdir("./image/") + "logo.jpg"
 image.save(logo)
 
 # 通过文件助手发给自己

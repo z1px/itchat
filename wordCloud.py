@@ -12,6 +12,8 @@ __author__ = 'Kevin'
 
 import itchat
 
+from common.func import mkdir
+
 
 # 登陆微信
 # hotReload=True  # 使用这个属性，生成一个静态文件itchat.pkl，用于存储登陆的状态。
@@ -58,7 +60,7 @@ plt.show()
 plt.close()
 
 #保存图片
-file_name_p =  './image/wechat_cloud.jpg'
+file_name_p =  mkdir("./image/") + 'wechat_cloud.jpg'
 my_wordcloud.to_file(file_name_p)
 
 # 将签名词云发送到文件助手

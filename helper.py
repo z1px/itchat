@@ -19,6 +19,6 @@ itchat.auto_login(hotReload=True)
 
 msg = "我看下"
 
-ToUserName = '@cc112089a58192af5e279827198a4e66d7c1ed24b3042eebff0640b198a5a209'
+ToUserName = 'filehelper'
 # 将签名词云发送到文件助手
 itchat.send(msg=msg, toUserName=ToUserName)
