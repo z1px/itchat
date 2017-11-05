@@ -17,7 +17,7 @@ import itchat
 # hotReload=True  # 使用这个属性，生成一个静态文件itchat.pkl，用于存储登陆的状态。
 itchat.auto_login(hotReload=True)
 
-print(itchat.search_friends(userName="@048fa97a9c87f0d0744d8f8057ce496959b5bc9d5d15ddb5cafa7546f1577fc3"))
+# print(itchat.search_chatrooms(userName="@@9e0d639cb86e12208ab424747ceb8fa8d70fe913d882f5d51ad4d6558aebfaae"))
 
 # msg = "https://github.com/z1px/itchat.git"
 

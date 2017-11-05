@@ -27,27 +27,34 @@ face_bug=None  #针对表情包的内容
 @itchat.msg_register([TEXT, PICTURE, FRIENDS, CARD, MAP, SHARING, RECORDING, ATTACHMENT, VIDEO],isFriendChat=True, isGroupChat=True, isMpChat=True)
 def handle_receive_msg(msg):
     global face_bug
+    print(msg)
     # 接受消息的时间
     msg_time_rec = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
 
     # 在好友列表中查询发送信息的好友昵称
-    msg_from = itchat.search_friends(userName=msg.get("FromUserName"))
-    if msg_from:
-        msg_from = msg_from["RemarkName"] if msg_from["RemarkName"] else msg_from['NickName']
+    if "@@" in msg.get("FromUserName"):
+        msg_from = itchat.search_chatrooms(userName=msg['FromUserName'])
+        if msg_from:
+            msg_from = msg_from['NickName']
+        else:
+            msg_from = msg['FromUserName']
+        msg_from += "（讨论组）"
     else:
-        msg_from = msg['FromUserName']
+        msg_from = itchat.search_friends(userName=msg['FromUserName'])
+        if msg_from:
+            msg_from = msg_from["RemarkName"] if msg_from["RemarkName"] else msg_from['NickName']
+        else:
+            msg_from = msg['FromUserName']
     # 在好友列表中查询接收信息的好友昵称
-    if msg.get("ActualUserName"):
-        # 讨论组消息
-        try:
-            msg_to = msg.get("User")
-            msg_to = msg_to.get("NickName")
-        except:
-            msg_to = msg.get("ToUserName")
-        msg_to = msg_to + "（讨论组）"
+    if "@@" in msg.get("ToUserName"):
+        msg_to = itchat.search_chatrooms(userName=msg['ToUserName'])
+        if msg_to:
+            msg_to = msg_to['NickName']
+        else:
+            msg_to = msg['FromUserName']
+            msg_to += "（讨论组）"
     else:
-        # 好友消息
-        msg_to = itchat.search_friends(userName=msg.get("ToUserName"))
+        msg_to = itchat.search_friends(userName=msg['ToUserName'])
         if msg_to:
             msg_to = msg_to["RemarkName"] if msg_to["RemarkName"] else msg_to['NickName']
         else:
@@ -92,7 +99,7 @@ def handle_receive_msg(msg):
     elif msg['Type'] == 'Sharing':     #如果消息为分享的音乐或者文章，详细的内容为文章的标题或者是分享的名字
         msg_content = msg['Text']
         msg_share_url = msg['Url']       #记录分享的url
-        print(msg_time, "[%s]分享了一条消息：《%s》 %s" % (msg_from, msg_content, msg_share_url))
+        print(msg_time, "[%s]给[%s]分享了一条消息：《%s》 %s" % (msg_from, msg_to,msg_content, msg_share_url))
     face_bug=msg_content
 
     # 将信息存储在字典中，每一个msg_id对应一条信息
@@ -118,15 +125,14 @@ def information(msg):
         # 接受消息的时间
         # msg_time_rec = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
         # 聊天对象
-        for key,val in msg.get("User").items():
-            print(key,val)
         if msg.get("ActualUserName"):
-            try:
-                msg_from = msg.get("User")
-                msg_from = msg_from.get("NickName")
-            except:
-                msg_from = msg.get("FromUserName")
-            msg_from = msg_from + "（讨论组）" # 讨论组消息
+            # 讨论组消息
+            msg_from = itchat.search_chatrooms(userName=msg['FromUserName'])
+            if msg_from:
+                msg_from = msg_from['NickName']
+            else:
+                msg_from = msg['FromUserName']
+            msg_from = msg_from + "（讨论组）"
             msg_to = msg.get("ActualUserName")
         else:
             # 好友消息
