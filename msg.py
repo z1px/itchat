@@ -102,14 +102,49 @@ def information(msg):
     if '撤回了一条消息' in msg['Content']:
         old_msg_id = re.search("\<msgid\>(.*?)\<\/msgid\>", msg['Content']).group(1)   #在返回的content查找撤回的消息的id
         old_msg = msg_information.get(old_msg_id)    #得到消息
+
+        # 接受消息的时间
+        # msg_time_rec = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+        # 聊天对象
+        for key,val in msg.get("User").items():
+            print(key,val)
+        if msg.get("ActualUserName"):
+            try:
+                msg_from = msg.get("User")
+                msg_from = msg_from.get("NickName")
+            except:
+                msg_from = msg.get("FromUserName")
+            msg_from = msg_from + "（讨论组）" # 讨论组消息
+            msg_to = msg.get("ActualUserName")
+        else:
+            # 好友消息
+            msg_from = itchat.search_friends(userName=msg.get("FromUserName"))
+            if msg_from:
+                msg_from = msg_from["RemarkName"] if msg_from["RemarkName"] else msg_from['NickName']
+            else:
+                msg_from = msg['FromUserName']
+
+            if msg["Text"] == "你撤回了一条消息":
+                msg_to = msg["ToUserName"]
+            else:
+                msg_to = msg['FromUserName']
+
+        # 在好友列表中查询撤回信息的好友昵称
+        msg_to = itchat.search_friends(userName=msg_to)
+        if msg_to:
+            msg_to = msg_to["RemarkName"] if msg_to["RemarkName"] else msg_to['NickName']
+        else:
+            msg_to = msg['ToUserName']
+
         # print(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()), old_msg)
         if len(old_msg_id)<11:  #如果发送的是表情包
             itchat.send_file(face_bug, toUserName='filehelper')
             print(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()), face_bug)
         else:  #发送撤回的提示给文件助手
+
             msg_body = "告诉你一个秘密~" + "\n" \
-                       + old_msg.get('msg_from') + " 撤回了 " + old_msg.get("msg_type") + " 消息" + "\n" \
-                       + old_msg.get('msg_time_rec') + "\n" \
+                       + "与["+ msg_from +"]的对话中，["+ msg_to +"]撤回了一条" + old_msg.get("msg_type") + " 消息" + "\n" \
+                       + "消息发送时间" + old_msg.get('msg_time') + "，撤销时间"+ old_msg.get('msg_time_rec') +"\n" \
                        + "撤回了什么 ⇣" + "\n" \
                        + r"" + old_msg.get('msg_content')
             #如果是分享的文件被撤回了，那么就将分享的url加在msg_body中发送给文件助手
