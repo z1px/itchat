@@ -51,7 +51,7 @@ def handle_receive_msg(msg):
         if msg_from:
             msg_from = msg_from['NickName'] + "（%s）" % msg_from["RemarkName"] if msg_from["RemarkName"] else msg_from['NickName']
         else:
-            msg = itchat.search_mps(userName=msg['FromUserName'])  # 公众号
+            msg_from = itchat.search_mps(userName=msg['FromUserName'])  # 公众号
             if msg_from:
                 msg_from = msg_from['NickName'] + "（公众号）"
             else:
