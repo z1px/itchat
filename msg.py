@@ -29,6 +29,7 @@ def handle_receive_msg(msg):
     global face_bug
     # 接受消息的时间
     msg_time_rec = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+    print(msg_time_rec, "msg：%s" % msg)
     # 在好友列表中查询发送信息的好友昵称
     if "@@" in msg.get("FromUserName"):
         # 群组成员发送消息
@@ -130,7 +131,9 @@ def information(msg):
         old_msg = msg_information.get(old_msg_id)    #得到消息
 
         # 接受消息的时间
-        # msg_time_rec = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+        msg_time_rec = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+        print(msg_time_rec, "msg：%s" % msg)
+        print(msg_time_rec, "old_msg：%s" % old_msg)
         # 聊天对象
         if msg.get("ActualUserName"):
             # 讨论组消息
