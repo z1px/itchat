@@ -29,7 +29,6 @@ def handle_receive_msg(msg):
     global face_bug
     # 接受消息的时间
     msg_time_rec = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-    print(msg)
     # 在好友列表中查询发送信息的好友昵称
     if "@@" in msg.get("FromUserName"):
         # 群组成员发送消息
@@ -42,10 +41,10 @@ def handle_receive_msg(msg):
         # 在聊天室列表中查询接收信息的聊天室名称
         msg_to = itchat.search_chatrooms(userName=msg['FromUserName'])
         if msg_to:
-            msg_to = msg_from['NickName']
+            msg_to = msg_to['NickName']
         else:
             msg_to = msg['FromUserName']
-            msg_to += "（讨论组）"
+        msg_to += "（讨论组）"
     else:
         msg_from = itchat.search_friends(userName=msg['FromUserName'])
         if msg_from:
@@ -60,7 +59,7 @@ def handle_receive_msg(msg):
                 msg_to = msg_to['NickName']
             else:
                 msg_to = msg['FromUserName']
-                msg_to += "（讨论组）"
+            msg_to += "（讨论组）"
         else:
             msg_to = itchat.search_friends(userName=msg['ToUserName'])
             if msg_to:
@@ -75,7 +74,7 @@ def handle_receive_msg(msg):
     if msg['Type'] == 'Text' or msg['Type'] == 'Friends':     #如果发送的消息是文本或者好友推荐
         msg_content = msg['Text']
         if msg_from != "newsapp":
-            print(msg_time, "[%s]给[%s]发送了一条消息：%s" % (msg_from, msg_to, msg_content))
+            print(msg_time, "【%s】给【%s】发送了一条消息：%s" % (msg_from, msg_to, msg_content))
     #如果发送的消息是附件、视屏、图片、语音
     elif msg['Type'] == "Attachment" or msg['Type'] == "Video" or msg['Type'] == 'Picture' or msg['Type'] == 'Recording':
         msg_content = msg['FileName']    #内容就是他们的文件名
@@ -90,14 +89,14 @@ def handle_receive_msg(msg):
             msg_type = "一条语音"
         else:
             msg_type = "一条消息"
-        print(msg_time, "[%s]给[%s]发送了[%s]：%s" % (msg_from, msg_to, msg_type, msg_content))
+        print(msg_time, "【%s】给【%s】发送了【%s】：%s" % (msg_from, msg_to, msg_type, msg_content))
     elif msg['Type'] == 'Card':    #如果消息是推荐的名片
         msg_content = msg['RecommendInfo']['NickName'] + '的名片'    #内容就是推荐人的昵称和性别
         if msg['RecommendInfo']['Sex'] == 1:
             msg_content += '性别为男'
         else:
             msg_content += '性别为女'
-        print(msg_time, "[%s]给[%s]推荐了[%s]名片：%s" % (msg_from, msg_to, msg['RecommendInfo']['NickName'], msg_content))
+        print(msg_time, "【%s】给【%s】推荐了【%s】名片：%s" % (msg_from, msg_to, msg['RecommendInfo']['NickName'], msg_content))
     elif msg['Type'] == 'Map':    #如果消息为分享的位置信息
         x, y, location = re.search("<location x=\"(.*?)\" y=\"(.*?)\".*label=\"(.*?)\".*", msg['OriContent']).group(1, 2, 3)
         if location is None:
@@ -107,7 +106,7 @@ def handle_receive_msg(msg):
     elif msg['Type'] == 'Sharing':     #如果消息为分享的音乐或者文章，详细的内容为文章的标题或者是分享的名字
         msg_content = msg['Text']
         msg_share_url = msg['Url']       #记录分享的url
-        print(msg_time, "[%s]给[%s]分享了一条消息：《%s》 %s" % (msg_from, msg_to,msg_content, msg_share_url))
+        print(msg_time, "【%s】给【%s】分享了一条消息：《%s》 %s" % (msg_from, msg_to,msg_content, msg_share_url))
     face_bug=msg_content
 
     # 将信息存储在字典中，每一个msg_id对应一条信息
@@ -169,7 +168,7 @@ def information(msg):
         else:  #发送撤回的提示给文件助手
 
             msg_body = "告诉你一个秘密~" + "\n" \
-                       + "与["+ msg_from +"]的对话中，["+ msg_to +"]撤回了一条" + old_msg.get("msg_type") + " 消息" + "\n" \
+                       + "与【"+ msg_from +"】的对话中，【"+ msg_to +"】撤回了一条" + old_msg.get("msg_type") + " 消息" + "\n" \
                        + "消息发送时间" + old_msg.get('msg_time') + "，撤销时间"+ old_msg.get('msg_time_rec') +"\n" \
                        + "撤回了什么 ⇣" + "\n" \
                        + r"" + old_msg.get('msg_content')
@@ -186,7 +185,7 @@ def information(msg):
                 os.remove(path + old_msg['msg_content'])
                 msg_body += "\n就是这个文件➣ " + old_msg['msg_content']
 
-            print("[消息撤回]：", msg_body + "\n[消息撤回END]")
+            print("【消息撤回】：", msg_body + "\n【消息撤回END】")
             # 删除字典旧消息
             msg_information.pop(old_msg_id)
 
