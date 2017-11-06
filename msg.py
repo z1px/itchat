@@ -35,17 +35,9 @@ def handle_receive_msg(msg):
         # 群组成员发送消息
         msg_from = itchat.search_friends(userName=msg.get("ActualUserName"))
         if msg_from:
-            msg_from = msg_from['NickName']
-            if msg_from["RemarkName"]:
-                msg_from += "（%s）" % msg_from["RemarkName"]
+            msg_from = msg_from['NickName'] + "（%s）" % msg_from["RemarkName"] if msg_from["RemarkName"] else msg_from['NickName']
         else:
-            msg_from = itchat.search_mps(userName=msg.get("ActualUserName"))  # 公账号
-            if msg_from:
-                msg_from = msg_from['NickName']
-                if msg_from["RemarkName"]:
-                    msg_from += "（公众号）"
-            else:
-                msg_from = msg['FromUserName']
+            msg_from = msg['ActualUserName']
 
         # 在聊天室列表中查询接收信息的聊天室名称
         msg_to = itchat.search_chatrooms(userName=msg['FromUserName'])
@@ -57,15 +49,11 @@ def handle_receive_msg(msg):
     else:
         msg_from = itchat.search_friends(userName=msg['FromUserName'])
         if msg_from:
-            msg_from = msg_from['NickName']
-            if msg_from["RemarkName"]:
-                msg_from += "（%s）" % msg_from["RemarkName"]
+            msg_from = msg_from['NickName'] + "（%s）" % msg_from["RemarkName"] if msg_from["RemarkName"] else msg_from['NickName']
         else:
             msg = itchat.search_mps(userName=msg['FromUserName'])  # 公众号
             if msg_from:
-                msg_from = msg_from['NickName']
-                if msg_from["RemarkName"]:
-                    msg_from += "（公众号）"
+                msg_from = msg_from['NickName'] + "（公众号）"
             else:
                 msg_from = msg['FromUserName']
 
