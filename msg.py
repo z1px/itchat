@@ -29,35 +29,44 @@ def handle_receive_msg(msg):
     global face_bug
     # 接受消息的时间
     msg_time_rec = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-
+    print(msg)
     # 在好友列表中查询发送信息的好友昵称
     if "@@" in msg.get("FromUserName"):
-        msg_from = itchat.search_chatrooms(userName=msg['FromUserName'])
+        # 群组成员发送消息
+        msg_from = itchat.search_friends(userName=msg.get("ActualUserName"))
         if msg_from:
-            msg_from = msg_from['NickName']
+            msg_from = msg_from["RemarkName"] if msg_from["RemarkName"] else msg_from['NickName']
         else:
             msg_from = msg['FromUserName']
-        msg_from += "（讨论组）"
+
+        # 在聊天室列表中查询接收信息的聊天室名称
+        msg_to = itchat.search_chatrooms(userName=msg['FromUserName'])
+        if msg_to:
+            msg_to = msg_from['NickName']
+        else:
+            msg_to = msg['FromUserName']
+            msg_to += "（讨论组）"
     else:
         msg_from = itchat.search_friends(userName=msg['FromUserName'])
         if msg_from:
             msg_from = msg_from["RemarkName"] if msg_from["RemarkName"] else msg_from['NickName']
         else:
             msg_from = msg['FromUserName']
-    # 在好友列表中查询接收信息的好友昵称
-    if "@@" in msg.get("ToUserName"):
-        msg_to = itchat.search_chatrooms(userName=msg['ToUserName'])
-        if msg_to:
-            msg_to = msg_to['NickName']
+
+        # 在好友列表中查询接收信息的好友昵称
+        if "@@" in msg.get("ToUserName"):
+            msg_to = itchat.search_chatrooms(userName=msg['ToUserName'])
+            if msg_to:
+                msg_to = msg_to['NickName']
+            else:
+                msg_to = msg['FromUserName']
+                msg_to += "（讨论组）"
         else:
-            msg_to = msg['FromUserName']
-            msg_to += "（讨论组）"
-    else:
-        msg_to = itchat.search_friends(userName=msg['ToUserName'])
-        if msg_to:
-            msg_to = msg_to["RemarkName"] if msg_to["RemarkName"] else msg_to['NickName']
-        else:
-            msg_to = msg['ToUserName']
+            msg_to = itchat.search_friends(userName=msg['ToUserName'])
+            if msg_to:
+                msg_to = msg_to["RemarkName"] if msg_to["RemarkName"] else msg_to['NickName']
+            else:
+                msg_to = msg['ToUserName']
 
     msg_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(msg['CreateTime']))    #信息发送的时间
     msg_id = msg['MsgId']    #每条信息的id
