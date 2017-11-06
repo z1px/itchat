@@ -68,7 +68,7 @@ def handle_receive_msg(msg):
         else:
             msg_to = itchat.search_friends(userName=msg['ToUserName'])
             if msg_to:
-                msg_to = msg_to["RemarkName"] if msg_to["RemarkName"] else msg_to['NickName']
+                msg_to = msg_to['NickName'] + "（%s）" % msg_to["RemarkName"] if msg_to["RemarkName"] else msg_to['NickName']
             else:
                 msg_to = msg['ToUserName']
 
@@ -152,7 +152,7 @@ def information(msg):
             # 好友消息
             msg_from = itchat.search_friends(userName=msg.get("FromUserName"))
             if msg_from:
-                msg_from = msg_from["RemarkName"] if msg_from["RemarkName"] else msg_from['NickName']
+                msg_from = msg_from['NickName'] + "（%s）" % msg_from["RemarkName"] if msg_from["RemarkName"] else msg_from['NickName']
             else:
                 msg_from = msg['FromUserName']
 
@@ -164,7 +164,7 @@ def information(msg):
         # 在好友列表中查询撤回信息的好友昵称
         msg_to = itchat.search_friends(userName=msg_to)
         if msg_to:
-            msg_to = msg_to["RemarkName"] if msg_to["RemarkName"] else msg_to['NickName']
+            msg_to = msg_to['NickName'] + "（%s）" % msg_to["RemarkName"] if msg_to["RemarkName"] else msg_to['NickName']
         else:
             msg_to = msg['ToUserName']
 
